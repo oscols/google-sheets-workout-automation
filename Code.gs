@@ -18,7 +18,8 @@ function generateWeek() {
     setBlock(outputSheet, blockNumber);
     rowCounter++;
   }
-  // TODO: find rows for week
+
+  var weekRows = findRowsForWeek(inputData, week);
   // TODO: set week style
   // TODO: find workouts
   // TODO: output workouts
@@ -55,8 +56,17 @@ function setBlock(outputSheet, blockNumber) {
   blockRange.setHorizontalAlignment('center');
 }
 
+function findRowsForWeek(inputData, week) {
+  var weekRows = [];
+  for (var i = 1; i < inputData.length; i++) {
+    if (inputData[i][1] == week) {
+      weekRows.push(inputData[i]);
+    }
+  }
+  return weekRows;
+}
+
 // Other placeholder functions unchanged
-function findRowsForWeek(inputData, week) { return []; }
 function setWeekStyle(outputSheet, week, rowCounter) {}
 function findWorkouts(weekRows) { return []; }
 function outputWorkouts(outputSheet, rowCounter, workouts) { return rowCounter; }
