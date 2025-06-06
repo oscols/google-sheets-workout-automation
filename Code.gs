@@ -1,3 +1,5 @@
+// Code.gs
+
 function generateWeek() {
   var blockNumber = 1;
   var week = 1;
@@ -9,9 +11,11 @@ function generateWeek() {
   var dataRange = inputSheet.getDataRange();
   var inputData = dataRange.getValues();
 
-  // TODO: clear output sheet if needed
-
-  // TODO: set header
+  var rowCounter = outputSheet.getLastRow();
+  if (rowCounter == 0) {
+    setHeader(outputSheet);
+    rowCounter++;
+  }
   // TODO: set block title
   // TODO: find rows for week
   // TODO: set week style
@@ -20,8 +24,22 @@ function generateWeek() {
   // TODO: set E1RM formulas
 }
 
-// Placeholder functions for future implementation
-function setHeader(outputSheet) {}
+function setHeader(outputSheet) {
+  outputSheet.appendRow([
+    'Client Name', 'Week', 'Workout', 'Exercise', 'Exercise',
+    'Set', 'Reps', 'RPE/%', 'TrueRPE', 'TrueWeight', 'E1RM', 'Comment'
+  ]);
+  var frozenRow = outputSheet.getRange(1, 1, 1, 12);
+  frozenRow.setBackground('#5da68a');
+  frozenRow.setFontColor('white');
+  frozenRow.setFontWeight('Bold');
+  frozenRow.setFontFamily('Roboto').setFontSize(12);
+
+  var alignmentRange = outputSheet.getRange(1, 5, 1, 8);
+  alignmentRange.setHorizontalAlignment('center');
+}
+
+// Other placeholder functions unchanged
 function setBlock(outputSheet, blockNumber) {}
 function findRowsForWeek(inputData, week) { return []; }
 function setWeekStyle(outputSheet, week, rowCounter) {}
