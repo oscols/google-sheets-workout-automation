@@ -24,7 +24,7 @@ function generateWeek() {
   setWeekStyle(outputSheet, week, rowCounter);
   rowCounter++;
 
-  // TODO: find workouts
+  var workouts = findWorkouts(weekRows);
   // TODO: output workouts
   // TODO: set E1RM formulas
 }
@@ -85,7 +85,24 @@ function setWeekStyle(outputSheet, week, rowCounter) {
   weekRange.setFontColor('#a0dbc1');
 }
 
+function findWorkouts(weekRows) {
+  var workouts = [];
+  var workout = [];
+  var workoutNumber = 1;
+  for (var i = 0; i < weekRows.length; i++) {
+    if (weekRows[i][2] == workoutNumber) {
+      workout.push(weekRows[i]);
+    } else {
+      workouts.push(workout);
+      workout = [];
+      workout.push(weekRows[i]);
+      workoutNumber++;
+    }
+  }
+  workouts.push(workout);
+  return workouts;
+}
+
 // Other placeholder functions unchanged
-function findWorkouts(weekRows) { return []; }
 function outputWorkouts(outputSheet, rowCounter, workouts) { return rowCounter; }
 function estimatedMax(outputSheet, rowCounter) {}
