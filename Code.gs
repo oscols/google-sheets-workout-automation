@@ -232,6 +232,6 @@ function estimatedMax(outputSheet, rowCounter) {
   for (var i = 2; i <= rowCounter; i++) {
     var formulaCell = outputSheet.getRange('K' + i);
     // ";" for Sweden locale, and "," for UK locale
-    formulaCell.setFormula('=IF(AND(NOT(ISBLANK($I' + i + ')); NOT(ISBLANK($J' + i + '))); $J' + i + '/VLOOKUP($G' + i + ' + (10 - $I' + i + '); Data!$A$2:$B$100; 2; TRUE); "")');
+    formulaCell.setFormula('=IF(AND(NOT(ISBLANK($I' + i + ')); NOT(ISBLANK($J' + i + '))); $J' + i + '/VLOOKUP($G' + i + ' + (10 - $I' + i + '); E1RM!$A$2:$B$100; 2; TRUE); "")');
   }
 }
