@@ -138,11 +138,9 @@ function outputWorkouts(outputSheet, rowCounter, workouts) {
 }
 
 function outputExercise(outputSheet, row, rowCounter) {
-  // Ensure sets is a number
   var sets = Number(row[4]); 
   var startRow = rowCounter;
 
-  // Process the Reps field
   var reps = [];
   if (row[5] !== '' && row[5] !== null) {
     var repsStr = row[5].toString();
@@ -155,7 +153,6 @@ function outputExercise(outputSheet, row, rowCounter) {
     reps = Array(sets).fill('');
   }
 
-  // Process the RPE/% field
   var rpes = [];
   if (row[6] !== '' && row[6] !== null) {
     var rpesStr = row[6].toString();
@@ -168,7 +165,6 @@ function outputExercise(outputSheet, row, rowCounter) {
     rpes = Array(sets).fill('');
   }
 
-  // Process the Comment field
   var commentLine = 0;
   var commentText = '';
   if (row[10] != '') {
@@ -177,13 +173,12 @@ function outputExercise(outputSheet, row, rowCounter) {
     commentLine = commentArr[1];
   }
 
-  // Output one row per set.
   for (var j = 1; j <= sets; j++) {
     var newRow;
     if (Number(commentLine) === j) {
       if (Number(rpes[0]) > 10) {
         newRow = [
-          row[0], row[1], row[2], row[3], row[3], '', 
+          row[0], row[1], row[2], row[3], row[3], '',
           reps[j-1], rpes[j-1], row[7], rpes[j-1], row[9], commentText
         ];
       } else {
@@ -207,7 +202,6 @@ function outputExercise(outputSheet, row, rowCounter) {
     }
     outputSheet.appendRow(newRow);
 
-    // Style each appended row
     var outputRange = outputSheet.getRange(rowCounter, 1, 1, 12);
     outputRange.setFontFamily('Roboto').setFontSize(11);
     outputRange.setFontWeight('bold');
@@ -215,7 +209,6 @@ function outputExercise(outputSheet, row, rowCounter) {
     var setsRange = outputSheet.getRange(rowCounter, 6, 1, 6);
     setsRange.setHorizontalAlignment('center');
 
-    // Highlight Exercise column background on first set
     var exerciseCell = outputSheet.getRange(rowCounter, 5);
     if (rowCounter == startRow) {
       exerciseCell.setBackground('#a0dbc1');
@@ -225,7 +218,6 @@ function outputExercise(outputSheet, row, rowCounter) {
     rowCounter++;
   }
 
-  // Apply a border around the group of rows for this exercise
   var groupRange = outputSheet.getRange(startRow, 1, sets, 12);
   groupRange.setBorder(
     true, true, true, true, true, false, 'black', SpreadsheetApp.BorderStyle.SOLID
@@ -234,4 +226,13 @@ function outputExercise(outputSheet, row, rowCounter) {
   return rowCounter;
 }
 
-function estimatedMax(outputSheet, rowCounter) {}
+function estimatedMax(outputSheet, rowCounter) {
+  for (var i = 2; i <= rowCounter; i++) {
+    var formulaCell = outputSheet.getRange('K' + i);
+    // ";" for Sweden locale
+    formulaCell.setFormula(
+      '=IF(AND(NOT(ISBLANK($I' + i + ')); NOT(ISBLANK($J' + i + '))); ' +
+      '$J' + i + '/VLOOKUP($G' + i + ' + (10 - $I' + i + '); Data!$A$2:$B$100; 2; TRUE); "")'
+    );
+  }
+}
