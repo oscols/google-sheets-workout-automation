@@ -25,8 +25,11 @@ function generateWeek() {
   rowCounter++;
 
   var workouts = findWorkouts(weekRows);
-  // TODO: output workouts
-  // TODO: set E1RM formulas
+
+  rowCounter = outputWorkouts(outputSheet, rowCounter, workouts);
+
+  // Set E1RM formulas
+  estimatedMax(outputSheet, rowCounter);
 }
 
 function setHeader(outputSheet) {
@@ -103,6 +106,44 @@ function findWorkouts(weekRows) {
   return workouts;
 }
 
-// Other placeholder functions unchanged
-function outputWorkouts(outputSheet, rowCounter, workouts) { return rowCounter; }
+function setWorkoutHeader(outputSheet, workout, rowCounter) {
+  var newRow = ['', '', '', '', 'Workout ', '', workout];
+  outputSheet.appendRow(newRow);
+
+  var outputRange = outputSheet.getRange(rowCounter, 1, 1, 12);
+  outputRange.setFontFamily('Roboto').setFontSize(11);
+  outputRange.setBackground('#5da68a');
+  outputRange.setBorder(
+    true, true, true, true, false, false, 'black', SpreadsheetApp.BorderStyle.SOLID_MEDIUM
+  );
+
+  var weekRange = outputSheet.getRange(rowCounter, 5, 1, 3);
+  weekRange.setFontFamily('Roboto').setFontSize(14);
+  weekRange.setFontColor('white');
+  weekRange.setFontWeight('bold');
+  weekRange.setHorizontalAlignment('center');
+}
+
+function outputWorkouts(outputSheet, rowCounter, workouts) {
+  for (var i = 0; i < workouts.length; i++) {
+    setWorkoutHeader(outputSheet, i + 1, rowCounter);
+    rowCounter++;
+
+    var workout = workouts[i];
+    for (var k = 0; k < workout.length; k++) {
+      rowCounter = outputExercise(outputSheet, workout[k], rowCounter);
+    }
+  }
+  rowCounter -= 1; // adjust for extra increment
+  return rowCounter;
+}
+
+function outputExercise(outputSheet, row, rowCounter) {
+  // Placeholder: simply append one row, no parsing logic yet
+  var newRow = [row[0], row[1], row[2], row[3], row[3], '', '', '', '', '', '', ''];
+  outputSheet.appendRow(newRow);
+  rowCounter++;
+  return rowCounter;
+}
+
 function estimatedMax(outputSheet, rowCounter) {}
