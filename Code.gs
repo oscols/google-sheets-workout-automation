@@ -1,15 +1,30 @@
 // Code.gs
 
+function onOpen() {
+  var ui = SpreadsheetApp.getUi();
+  ui.createMenu('Workout Tools')
+    .addItem('Generate Week', 'generateWeek')
+    .addToUi();
+}
+
 function generateWeek() {
   var blockNumber = 5;
   var week = 6;
   var clear = false;
 
   var ss = SpreadsheetApp.getActiveSpreadsheet();
-  var outputSheet = ss.getSheetByName('Block ' + blockNumber);
+
+  var inputName  = 'Block ' + blockNumber + ' Plan';
   var inputSheet = ss.getSheetByName('Block ' + blockNumber + ' Plan');
-  var dataRange = inputSheet.getDataRange(); // Gets all the data
-  var inputData = dataRange.getValues(); // Converts to a 2D array
+  if (!inputSheet) {
+    throw new Error("Can't find input sheet '" + inputName + "'");
+  }
+
+  var outputName  = 'Block ' + blockNumber;
+  var outputSheet = ss.getSheetByName(outputName);
+  if (!outputSheet) {
+    outputSheet = ss.insertSheet(outputName);
+  }
   
   // Clear the output sheet
   if (clear) {
@@ -18,6 +33,8 @@ function generateWeek() {
   
   // Write the header in output sheet
   var rowCounter = outputSheet.getLastRow();
+  var dataRange = inputSheet.getDataRange(); // Gets all the data
+  var inputData = dataRange.getValues(); // Converts to a 2D array
 
   if (rowCounter == 0) {
     setHeader(outputSheet);
