@@ -1,18 +1,62 @@
 // Code.gs
 
-//Menu 
+/**
+ * Adds the “Workout Tools” menu when the sheet opens
+ */
 function onOpen() {
-  var ui = SpreadsheetApp.getUi();
-  ui.createMenu('Workout Tools')
-    .addItem('Generate Week', 'generateWeek')
+  SpreadsheetApp.getUi()
+    .createMenu('Workout Tools')
+    .addItem('Generate Week', 'generateWeekWizard')
     .addToUi();
 }
 
-function generateWeek() {
-  var blockNumber = 5;
-  var week = 6;
-  var clear = false;
+/**
+ * Step-by-step pop-ups:
+ *   1. Block number
+ *   2. Week number
+ *   3. Clear existing output?  Yes / No
+ * Then calls generateWeek(block, week, clearFlag)
+ */
+function generateWeekWizard() {
+  const ui = SpreadsheetApp.getUi();
 
+  const blockRes = ui.prompt(
+    'Generate Week — Step 1 of 3',
+    'Enter *block number* (e.g. 2):',
+    ui.ButtonSet.OK_CANCEL
+  );
+  if (blockRes.getSelectedButton() !== ui.Button.OK) return;
+
+  const block = parseInt(blockRes.getResponseText().trim(), 10);
+  if (isNaN(block) || block <= 0) {
+    ui.alert('Block number must be a positive integer.');
+    return;
+  }
+
+  const weekRes = ui.prompt(
+    'Generate Week — Step 2 of 3',
+    'Enter *week number* (e.g. 3):',
+    ui.ButtonSet.OK_CANCEL
+  );
+  if (weekRes.getSelectedButton() !== ui.Button.OK) return;
+
+  const week = parseInt(weekRes.getResponseText().trim(), 10);
+  if (isNaN(week) || week <= 0) {
+    ui.alert('Week number must be a positive integer.');
+    return;
+  }
+
+  const clearRes = ui.alert(
+    'Generate Week — Step 3 of 3',
+    'Clear existing rows in the output sheet **before** writing new data?',
+    ui.ButtonSet.YES_NO
+  );
+  const clearFlag = (clearRes === ui.Button.YES);
+
+  generateWeek(block, week, clearFlag);
+}
+
+function generateWeek(blockNumber, week, clear) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
 
   var inputName  = 'Block ' + blockNumber + ' Plan';
