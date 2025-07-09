@@ -118,6 +118,9 @@ At the top of `generateWeek()`:
 2. Ensure you have an **E1RM** sheet or imported CSV with Repmax/% lookup  
 3. Create or open the **Block X** sheet  
 4. In the Apps Script editor, run `generateWeek()`
+5. Hide Column A-D and F and it should look something like this:
+
+![alt text](image.png)
 
 ---
 
