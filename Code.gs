@@ -46,12 +46,12 @@ function generateWeekWizard() {
     return;
   }
 
-  const clearRes = ui.alert(
-    'Generate Week — Step 3 of 3',
-    'Clear existing rows in the output sheet **before** writing new data?',
+  const res = ui.alert(
+    'Generate Week — Step 3 of 3',
+    'Keep the existing rows in the output sheet?',
     ui.ButtonSet.YES_NO
   );
-  const clearFlag = (clearRes === ui.Button.YES);
+  const clearFlag = (res === ui.Button.NO);
 
   generateWeek(block, week, clearFlag);
 }
